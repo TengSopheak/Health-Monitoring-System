@@ -1,6 +1,6 @@
 #include "Frame2.h"
 #include "../display/Frame3.h"
-#include "../src/database/databaseConnection.h"
+#include "../database/databaseConnection.h"
 
 #include <iostream>
 #include <wx/font.h>
@@ -104,7 +104,7 @@ Frame2::Frame2(const wxString& title)
 
     continueButton = new wxButton(panel, wxID_ANY, "Continue", wxPoint(294, 517.2), wxSize(142.7, 40));
 
-    labelText = new wxStaticText(panel, wxID_ANY, "", wxPoint(117, 606.7));
+    labelText = new wxStaticText(panel, wxID_ANY, "", wxPoint(25, 606.7));
     wxFont labelTextFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, "Georgia");
     labelText->SetFont(labelTextFont);
     labelText->SetForegroundColour(*wxRED);
@@ -181,15 +181,56 @@ void Frame2::continueButtonClicked(wxCommandEvent& event)
         storedBloodPressure2 = wxAtoi(bloodPressure2);
         storedTemperature = wxAtof(temperature);
 
+        std::string newbornExactAgeList[5] =
+        {
+            "Birth", "1 week", "2 weeks", "3 weeks", "4 weeks"
+        };
+
+        std::string infantExactAgeList[11] =
+        {
+            "1 month", "2 months", "3 months", "4 months", "5 months",
+            "6 months", "7 months", "8 months", "9 months", "10 months",
+            "11 months"
+        };
+
         if (storedHeartRate < 0 || storedBloodPressure1 < 0 || storedBloodPressure2 < 0 || storedTemperature < 0)
         {
             labelText->SetLabel("Please input only positive numbers!");
             return;
         }
-
         if (isMaleChecked && isFemaleChecked)
         {
             labelText->SetLabel("Select Male or Female, not Both!");
+            return;
+        }
+        else if (selectedAgeGroup == "Newborn" && std::find(std::begin(newbornExactAgeList), std::end(newbornExactAgeList), exactAge) == std::end(newbornExactAgeList))
+        {
+            labelText->SetLabel("Newborn age must be between Birth and 4 weeks!");
+            return;
+        }
+        else if (selectedAgeGroup == "Infant" && std::find(std::begin(infantExactAgeList), std::end(infantExactAgeList), exactAge) == std::end(infantExactAgeList))
+        {
+            labelText->SetLabel("Infant age must be between 1 and 11 months!");
+            return;
+        }
+        else if (selectedAgeGroup == "Toddler" && (wxAtoi(exactAge) < 1 || wxAtoi(exactAge) > 3))
+        {
+            labelText->SetLabel("Infant age must be between 1 and 3!");
+            return;
+        }
+        else if (selectedAgeGroup == "Preschooler" && (wxAtoi(exactAge) < 4 || wxAtoi(exactAge) > 5))
+        {
+            labelText->SetLabel("Preschooler age must either be 4 or 5!");
+            return;
+        }
+        else if (selectedAgeGroup == "School-aged child" && (wxAtoi(exactAge) < 6 || wxAtoi(exactAge) > 12))
+        {
+            labelText->SetLabel("School-aged child age must be between 6 and 12!");
+            return;
+        }
+        else if (selectedAgeGroup == "Teenager" && (wxAtoi(exactAge) < 13 || wxAtoi(exactAge) > 17))
+        {
+            labelText->SetLabel("Teenager age must be between 13 and 17!");
             return;
         }
         else if (selectedAgeGroup == "Adult" && (wxAtoi(exactAge) < 18 || wxAtoi(exactAge) > 64))

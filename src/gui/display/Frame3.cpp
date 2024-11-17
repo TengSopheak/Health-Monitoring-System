@@ -8,7 +8,7 @@
 
 Frame3::Frame3(const wxString& title, std::string name, std::string gender, std::string ageGroup, std::string exactAge,
     int heartRate, int bloodPressure1, int bloodPressure2, double temperature)
-    : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(1920, 680),
+    : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(1920, 730),
         wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX))
 {
     wxPanel* panel = new wxPanel(this);
@@ -45,7 +45,7 @@ Frame3::Frame3(const wxString& title, std::string name, std::string gender, std:
 
     // Load Monitor Image
     wxImage image;
-    if (!image.LoadFile("src/image/monitor.png", wxBITMAP_TYPE_PNG)) {
+    if (!image.LoadFile("monitor.png", wxBITMAP_TYPE_PNG)) {
         wxLogError("Could not load image");
         return;
     }
@@ -148,6 +148,16 @@ Frame3::Frame3(const wxString& title, std::string name, std::string gender, std:
     bloodPressureNormality = new wxStaticText(panel, wxID_ANY, "", wxPoint(1712.3, 491.9));
     temperatureCelsiusNormality = new wxStaticText(panel, wxID_ANY, "", wxPoint(1712.3, 553.4));
 
+    returnButton = new wxButton(panel, wxID_ANY, "Return", wxPoint(870, 620), wxSize(160, 54));
+
+    wxFont buttonFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, "Georgia");
+
+    returnButton->SetFont(buttonFont);
+    returnButton->SetBackgroundColour(wxColour("#38b6ff"));
+    returnButton->SetForegroundColour(*wxWHITE);
+
+    returnButton->Bind(wxEVT_BUTTON, &Frame3::returnButtonClicked, this);
+
     checkNormality(panel, font4);
 }
 
@@ -162,6 +172,14 @@ void Frame3::drawShape(wxPaintEvent& event)
 
     dc.DrawLine(552.6, 87.5, 1367.4, 87.5);
     dc.DrawRectangle(0, 359, 1920, 54); // Draw a rectangle
+}
+
+void Frame3::returnButtonClicked(wxCommandEvent& event)
+{
+    Frame1* frame1 = new Frame1("Health Monitor");
+    frame1->Show();
+
+    Close();
 }
 
 void Frame3::Initialize(const std::string gender, const std::string ageGroup, const std::string exactAge,
@@ -224,7 +242,7 @@ void Frame3::checkNormality(wxPanel* panel, wxFont font4)
 
     if (!retrievedIsHeartRateNormal)
     {
-        if (!image.LoadFile("src/image/warning.png", wxBITMAP_TYPE_PNG)) {
+        if (!image.LoadFile("warning.png", wxBITMAP_TYPE_PNG)) {
             wxLogError("Could not load image");
             return;
         }
@@ -244,7 +262,7 @@ void Frame3::checkNormality(wxPanel* panel, wxFont font4)
     }
     else
     {
-        if (!image.LoadFile("src/image/accept.png", wxBITMAP_TYPE_PNG)) {
+        if (!image.LoadFile("accept.png", wxBITMAP_TYPE_PNG)) {
             wxLogError("Could not load image");
             return;
         }
@@ -265,7 +283,7 @@ void Frame3::checkNormality(wxPanel* panel, wxFont font4)
 
     if (!retrievedIsBloodPressureNormal)
     {
-        if (!image.LoadFile("src/image/warning.png", wxBITMAP_TYPE_PNG)) {
+        if (!image.LoadFile("warning.png", wxBITMAP_TYPE_PNG)) {
             wxLogError("Could not load image");
             return;
         }
@@ -285,7 +303,7 @@ void Frame3::checkNormality(wxPanel* panel, wxFont font4)
     }
     else
     {
-        if (!image.LoadFile("src/image/accept.png", wxBITMAP_TYPE_PNG)) {
+        if (!image.LoadFile("accept.png", wxBITMAP_TYPE_PNG)) {
             wxLogError("Could not load image");
             return;
         }
@@ -306,7 +324,7 @@ void Frame3::checkNormality(wxPanel* panel, wxFont font4)
 
     if (!retrievedIsTemperatureNormal)
     {
-        if (!image.LoadFile("src/image/warning.png", wxBITMAP_TYPE_PNG)) {
+        if (!image.LoadFile("warning.png", wxBITMAP_TYPE_PNG)) {
             wxLogError("Could not load image");
             return;
         }
@@ -326,7 +344,7 @@ void Frame3::checkNormality(wxPanel* panel, wxFont font4)
     }
     else
     {
-        if (!image.LoadFile("src/image/accept.png", wxBITMAP_TYPE_PNG)) {
+        if (!image.LoadFile("accept.png", wxBITMAP_TYPE_PNG)) {
             wxLogError("Could not load image");
             return;
         }
